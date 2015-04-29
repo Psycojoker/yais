@@ -30,13 +30,13 @@ class User():
         try:
             data = yield from self.get_next_line()
 
-            proto, nick = data.rstrip().split()
+            proto, nick = data.split()
             assert proto == "NICK"
             self.nick = nick
 
             data = yield from self.get_next_line()
 
-            proto, realname = data.rstrip().split(" ", 1)
+            proto, realname = data.split(" ", 1)
             assert proto == "USER"
             self.send(":%s MODE %s :+i" % (nick, nick))
 
@@ -63,7 +63,7 @@ class User():
             data = (yield from self.reader.readline())
 
         self.debug(data.decode("Utf-8"))
-        return data.decode("Utf-8")
+        return data.decode("Utf-8").rstrip()
 
     def debug(self, data):
         if isinstance(data, bytes):

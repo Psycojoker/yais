@@ -47,10 +47,15 @@ class User():
 
                 command, data = data.split(" ", 1)
 
-                if hasattr(self, "on_%s" % command):
-                    getattr(self, "on_%s" % command)(data)
-                else:
-                    self.debug("UKNOWN COMMAND: %s %s" % (command, data))
+                try:
+                    if hasattr(self, "on_%s" % command):
+                        getattr(self, "on_%s" % command)(data)
+                    else:
+                        self.debug("UKNOWN COMMAND: %s %s" % (command, data))
+                except Exception as e:
+                    import traceback, sys
+                    traceback.print_exc(file=sys.stdout)
+                    self.debug(e)
 
         except Exception as e:
             import traceback, sys

@@ -75,7 +75,7 @@ class User():
         if isinstance(data, bytes):
             print("%s -> %s" % (self.nick if self.nick else id(self), data.decode("Utf-8").rstrip()))
         else:
-            print("%s -> %s" % (self.nick if self.nick else id(self), data.rstrip() if hasattr(data, rstrip) else data))
+            print("%s -> %s" % (self.nick if self.nick else id(self), data.rstrip() if hasattr(data, "rstrip") else data))
 
     def send(self, data):
         if isinstance(data, bytes):

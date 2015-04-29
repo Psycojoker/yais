@@ -47,8 +47,10 @@ class User():
 
                 command, data = data.split(" ", 1)
 
-                if command == "PING":
-                    self.send("PONG " + data)
+                if hasattr(self, "on_%s" % command):
+                    getattr(self, "on_%s" % command)(data)
+                else:
+                    self.debug("UKNOWN COMMAND: %s %s" % (command, data))
 
         except Exception as e:
             import traceback, sys
@@ -90,6 +92,9 @@ class User():
         self.send(":myself 002 %s :foo" % self.nick)
         self.send(":myself 003 %s :bar" % self.nick)
         self.send(":myself 004 %s :baz" % self.nick)
+
+    def on_PING(self, data):
+        self.send("PONG " + data)
 
 
 loop = asyncio.get_event_loop()

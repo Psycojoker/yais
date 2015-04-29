@@ -44,7 +44,6 @@ class User():
 
             while True:
                 data = yield from self.get_next_line()
-                self.debug(data)
 
                 command, data = data.split(" ", 1)
 

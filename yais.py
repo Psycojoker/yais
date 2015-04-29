@@ -40,10 +40,7 @@ class User():
             assert proto == "USER"
             self.send(":%s MODE %s :+i" % (nick, nick))
 
-            self.send(":myself 001 %s :Hello honey" % nick)
-            self.send(":myself 002 %s :foo" % nick)
-            self.send(":myself 003 %s :bar" % nick)
-            self.send(":myself 004 %s :baz" % nick)
+            self.send_motd()
 
             while True:
                 data = yield from self.get_next_line()
@@ -88,6 +85,12 @@ class User():
 
             print("%s <- %s" % (self.nick, data.rstrip()))
             self.writer.write(data.encode("Utf-8"))
+
+    def send_motd(self):
+        self.send(":myself 001 %s :Hello honey" % self.nick)
+        self.send(":myself 002 %s :foo" % self.nick)
+        self.send(":myself 003 %s :bar" % self.nick)
+        self.send(":myself 004 %s :baz" % self.nick)
 
 
 loop = asyncio.get_event_loop()

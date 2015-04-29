@@ -101,6 +101,12 @@ class User():
     def on_PING(self, data):
         self.send("PONG " + data)
 
+    def on_NICK(self, data):
+        # XXX should be send to *all* users that know this nick
+        # TODO nick collision
+        self.send(":%s NICK %s" % (self.nick, data))
+        self.nick = data
+
 
 loop = asyncio.get_event_loop()
 print("Starting server...")

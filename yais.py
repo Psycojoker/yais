@@ -112,6 +112,11 @@ class User():
         # FIXME a chan can't start with a [a-zA-Z]
         self.send(":%s JOIN %s" % (self.nick, data))
 
+    def on_PRIVMSG(self, data):
+        target, content = data.split(" :", 1)
+        # TODO send message to target
+        pass
+
 
 loop = asyncio.get_event_loop()
 print("Starting server...")

@@ -2,21 +2,21 @@ import asyncio
 
 class IRCServer():
     def __init__(self):
-        self.users = []
+        self.users = {}
         self.tasks_to_user = {}
 
     def client_connected_handler(self, reader, writer):
         print("New user")
-        user = User(reader, writer)
-        self.users.append(user)
+        user = User(reader, writer, self)
 
         task = asyncio.Task(user.loop())
+
         self.tasks_to_user[task] = user
         task.add_done_callback(self.client_connected_done)
 
     def client_connected_done(self, task):
         user = self.tasks_to_user[task]
-        self.users.remove(user)
+        del self.users[user]
 
 
 class Chan():
@@ -25,9 +25,10 @@ class Chan():
 
 
 class User():
-    def __init__(self, reader, writer):
+    def __init__(self, reader, writer, server):
         self.reader = reader
         self.writer = writer
+        self.server = server
         self.nick = None
 
     @asyncio.coroutine
@@ -38,6 +39,10 @@ class User():
             proto, nick = data.split()
             assert proto == "NICK"
             self.nick = nick
+
+            self.server.users[self.nick] = self
+
+            # TODO handle nick collision
 
             data = yield from self.get_next_line()
 
@@ -110,7 +115,11 @@ class User():
         # XXX should be send to *all* users that know this nick
         # TODO nick collision
         self.send(":%s NICK %s" % (self.nick, data))
+
+        del self.server.users[self.nick]
         self.nick = data
+        self.server.users[self.nick] = self
+
 
     def on_JOIN(self, data):
         # XXX should be send to *all* users on that chan

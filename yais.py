@@ -19,6 +19,11 @@ class IRCServer():
         self.users.remove(user)
 
 
+class Chan():
+    def __init__(self, name):
+        self.name = name
+
+
 class User():
     def __init__(self, reader, writer):
         self.reader = reader

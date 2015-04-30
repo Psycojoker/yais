@@ -107,6 +107,11 @@ class User():
         self.send(":%s NICK %s" % (self.nick, data))
         self.nick = data
 
+    def on_JOIN(self, data):
+        # XXX should be send to *all* users on that chan
+        # FIXME a chan can't start with a [a-zA-Z]
+        self.send(":%s JOIN %s" % (self.nick, data))
+
 
 loop = asyncio.get_event_loop()
 print("Starting server...")

@@ -120,7 +120,6 @@ class User():
         self.nick = data
         self.server.users[self.nick] = self
 
-
     def on_JOIN(self, data):
         # XXX should be send to *all* users on that chan
         # FIXME a chan can't start with a [a-zA-Z]
